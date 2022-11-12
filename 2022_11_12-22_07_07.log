@@ -1,0 +1,14 @@
+[LEXER] обработка:
+"""
+boolean true 2f 34 -434 24523432 234324234244 'f' "test"
+"""
+[LEXER] слово "boolean"
+[LEXER] булево значение true
+[LEXER] число float "2"
+[LEXER] число byte "34"
+[LEXER] число short "-434"
+[LEXER] число int "24523432"
+[LEXER] число long "234324234244"
+[LEXER] char 'f'
+[LEXER] строка "test"
+[LEXER] конец файла
