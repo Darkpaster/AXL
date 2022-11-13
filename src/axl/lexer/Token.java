@@ -42,6 +42,8 @@ public class Token {
         PERCENT,    // %
         AND,        // &
         OR,         // |
+        QUEST,      // ?
+        COLON,      // :
 
         EQUAL,      // =
         EPLUS,      // +=
@@ -335,6 +337,16 @@ public class Token {
     public boolean is_not()
     {
         return equal(TokenType.NOT);
+    }
+
+    public boolean is_quest()
+    {
+        return equal(TokenType.QUEST);
+    }
+
+    public boolean is_colon()
+    {
+        return equal(TokenType.COLON);
     }
 
     public boolean is_endfile()

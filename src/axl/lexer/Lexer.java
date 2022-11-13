@@ -119,8 +119,77 @@ public class Lexer {
         next();
     }
 
+    private void token_number_bit()
+    {
+        StringBuilder str = new StringBuilder();
+        while((current >= '0' && '1' >= current))
+        {
+            str.append(current);
+            next();
+        }
+        if(str.toString().equals("")) LOGGER.log("[LEXER] передана структура 0b без числа", true);
+
+        long value = Long.parseLong(str.toString(), 2);
+
+        token_number_value(value);
+    }
+
+    private void token_number_oct()
+    {
+        StringBuilder str = new StringBuilder();
+        while((current >= '0' && '7' >= current))
+        {
+            str.append(current);
+            next();
+        }
+        if(str.toString().equals("")) LOGGER.log("[LEXER] передана структура 0 без числа", true);
+
+        long value = Long.parseLong(str.toString(), 8);
+
+        token_number_value(value);
+    }
+
+    private void token_number_hex()
+    {
+        StringBuilder str = new StringBuilder();
+        while((current >= '0' && '9' >= current) || (current >= 'a' && 'f' >= current) || (current >= 'A' && 'F' >= current))
+        {
+            str.append(current);
+            next();
+        }
+        if(str.toString().equals("")) LOGGER.log("[LEXER] передана структура 0x без числа", true);
+
+        long value = Long.parseLong(str.toString(), 16);
+
+        token_number_value(value);
+    }
+
     private void token_number()
     {
+
+        if(current == '0')
+        {
+            next();
+            if(current == 'x')
+            {
+                next();
+                token_number_hex();
+                return;
+            }
+            if(current == 'b')
+            {
+                next();
+                token_number_bit();
+                return;
+            }
+            if(current == 'q')
+            {
+                next();
+                token_number_oct();
+                return;
+            }
+        }
+
         StringBuilder str = new StringBuilder();
         boolean type = false;
 
@@ -130,23 +199,15 @@ public class Lexer {
 
             if(current == '.') {
                 type = true;
-                next();
-                if(!(current >= '0' && '9' >= current))
-                {
-                    last();
-                    token_op();
-                    return;
-                }
-                last();
-            } else {
-                next();
-                if (!(current >= '0' && '9' >= current)) {
-                    last();
-                    token_op();
-                    return;
-                }
-                last();
             }
+            next();
+            if(!(current >= '0' && '9' >= current))
+            {
+                last();
+                token_op();
+                return;
+            }
+            last();
 
             next();
         }
@@ -185,20 +246,25 @@ public class Lexer {
             return;
         }
 
+        token_number_value((long) value);
+    }
+
+    private void token_number_value(long value)
+    {
         if(value >= -127 && value <= 128) {
-            LOGGER.log("[LEXER] число byte \""+str+"\"");
+            LOGGER.log("[LEXER] число byte \""+value+"\"");
             add(new Token(Token.TokenType.BYTE, new ValueByte((byte) value)));
         }
         else if (value >= -32768 && value <= 32767) {
-            LOGGER.log("[LEXER] число short \""+str+"\"");
+            LOGGER.log("[LEXER] число short \""+value+"\"");
             add(new Token(Token.TokenType.SHORT, new ValueShort((short) value)));
         }
         else if (value >= -2147483648 && value <= 2147483647) {
-            LOGGER.log("[LEXER] число int \""+str+"\"");
+            LOGGER.log("[LEXER] число int \""+value+"\"");
             add(new Token(Token.TokenType.INT, new ValueInt((int) value)));
         }
         else {
-            LOGGER.log("[LEXER] число long \""+str+"\"");
+            LOGGER.log("[LEXER] число long \""+value+"\"");
             add(new Token(Token.TokenType.LONG, new ValueLong((long) value)));
         }
     }
@@ -226,6 +292,7 @@ public class Lexer {
 
     private void token_op()
     {
+        if(current == 0x00) return;
         Token.TokenType type = null;
         switch (current) {
             case ';' -> type = Token.TokenType.SEMI;
@@ -237,6 +304,8 @@ public class Lexer {
             case '}' -> type = Token.TokenType.RBRACE;
             case '[' -> type = Token.TokenType.LSQUARE;
             case ']' -> type = Token.TokenType.RSQUARE;
+            case '?' -> type = Token.TokenType.QUEST;
+            case ':' -> type = Token.TokenType.COLON;
             case '+' -> {
                 next();
                 if (current == '+') {
@@ -393,7 +462,7 @@ public class Lexer {
         next();
 
         if(type == Token.TokenType.ENDFILE)
-            LOGGER.log("[LEXER] неизвестный символ '"+current+"'");
+            LOGGER.log("[LEXER] неизвестный символ 0x"+(byte)current);
         else
         {
             LOGGER.log("[LEXER] оператор '"+type+"'");
@@ -401,11 +470,26 @@ public class Lexer {
         }
     }
 
-    private void token_comment_multi() {
+    private void token_comment_multi()
+    {
+        while (i < content.length()-1)
+        {
+            next();
+            if(current == '*')
+            {
+                next();
+                if(current == '/')
+                    break;
+            }
+        }
+        if (!(i < content.length()-1)) LOGGER.log("[LEXER] не закрыт коментарий '/*'");
+        next();
     }
 
-    private void token_comment_uno() {
-
+    private void token_comment_uno()
+    {
+        while (i < content.length()-1 && !(current == '\n' || current == '\r'))
+            next();
+        next();
     }
-
 }
