@@ -1,6 +1,8 @@
 package axl.general;
 
-public class Value {
+import axl.parser.ast.Ast;
+
+public class Value extends Ast {
     String value_string;
     short value_short;
     int value_int;
@@ -11,47 +13,47 @@ public class Value {
     boolean value_boolean;
     byte value_byte;
 
-    public final String   getString()
+    public String   getString()
     {
         return value_string;
     }
 
-    public final int      getInt()
+    public int      getInt()
     {
         return value_int;
     }
 
-    public final long     getLong()
+    public long     getLong()
     {
         return value_long;
     }
 
-    public final short    getShort()
+    public short    getShort()
     {
         return value_short;
     }
 
-    public final float    getFloat()
+    public float    getFloat()
     {
         return value_float;
     }
 
-    public final double   getDouble()
+    public double   getDouble()
     {
         return value_double;
     }
 
-    public final char     getChar()
+    public char     getChar()
     {
         return value_char;
     }
 
-    public final boolean  getBoolean()
+    public boolean  getBoolean()
     {
         return value_boolean;
     }
 
-    public final byte     getByte()
+    public byte     getByte()
     {
         return value_byte;
     }
@@ -107,5 +109,11 @@ public class Value {
 
     public boolean        is_byte() {
         return false;
+    }
+
+    @Override
+    public boolean        is_value()
+    {
+        return true;
     }
 }

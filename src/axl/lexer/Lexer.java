@@ -83,7 +83,7 @@ public class Lexer {
             token_op();
         }
         LOGGER.log("[LEXER] конец файла");
-        add(new Token(Token.TokenType.ENDFILE));
+        add(new Token(Token.Type.ENDFILE));
     }
 
     private void token_string()
@@ -103,14 +103,14 @@ public class Lexer {
         next();
 
         LOGGER.log("[LEXER] строка \""+str+"\"");
-        tokens.add(new Token(Token.TokenType.STRING, new ValueString(str.toString())));
+        tokens.add(new Token(Token.Type.STRING, new ValueString(str.toString())));
     }
 
     private void token_char()
     {
         next();
         LOGGER.log("[LEXER] char '"+current+"'");
-        tokens.add(new Token(Token.TokenType.CHAR, new ValueChar(current)));
+        tokens.add(new Token(Token.Type.CHAR, new ValueChar(current)));
         next();
 
         if(current != '\'')
@@ -237,11 +237,11 @@ public class Lexer {
         {
             if(is_double) {
                 LOGGER.log("[LEXER] число double \""+str+"\"");
-                add(new Token(Token.TokenType.DOUBLE, new ValueDouble(value)));
+                add(new Token(Token.Type.DOUBLE, new ValueDouble(value)));
             }
             else {
                 LOGGER.log("[LEXER] число float \""+str+"\"");
-                add(new Token(Token.TokenType.FLOAT, new ValueFloat((float) value)));
+                add(new Token(Token.Type.FLOAT, new ValueFloat((float) value)));
             }
             return;
         }
@@ -253,19 +253,19 @@ public class Lexer {
     {
         if(value >= -127 && value <= 128) {
             LOGGER.log("[LEXER] число byte \""+value+"\"");
-            add(new Token(Token.TokenType.BYTE, new ValueByte((byte) value)));
+            add(new Token(Token.Type.BYTE, new ValueByte((byte) value)));
         }
         else if (value >= -32768 && value <= 32767) {
             LOGGER.log("[LEXER] число short \""+value+"\"");
-            add(new Token(Token.TokenType.SHORT, new ValueShort((short) value)));
+            add(new Token(Token.Type.SHORT, new ValueShort((short) value)));
         }
         else if (value >= -2147483648 && value <= 2147483647) {
             LOGGER.log("[LEXER] число int \""+value+"\"");
-            add(new Token(Token.TokenType.INT, new ValueInt((int) value)));
+            add(new Token(Token.Type.INT, new ValueInt((int) value)));
         }
         else {
             LOGGER.log("[LEXER] число long \""+value+"\"");
-            add(new Token(Token.TokenType.LONG, new ValueLong((long) value)));
+            add(new Token(Token.Type.LONG, new ValueLong((long) value)));
         }
     }
 
@@ -282,56 +282,56 @@ public class Lexer {
         if (str.toString().equals("true") || str.toString().equals("false"))
         {
             LOGGER.log("[LEXER] булево значение "+str);
-            tokens.add(new Token(Token.TokenType.BOOLEAN, new ValueBoolean(str.toString().equals("true"))));
+            tokens.add(new Token(Token.Type.BOOLEAN, new ValueBoolean(str.toString().equals("true"))));
             return;
         }
 
         LOGGER.log("[LEXER] слово \""+str+"\"");
-        tokens.add(new Token(Token.TokenType.WORD, new ValueString(str.toString())));
+        tokens.add(new Token(Token.Type.WORD, new ValueString(str.toString())));
     }
 
     private void token_op()
     {
         if(current == 0x00) return;
-        Token.TokenType type = null;
+        Token.Type type = null;
         switch (current) {
-            case ';' -> type = Token.TokenType.SEMI;
-            case '.' -> type = Token.TokenType.DOT;
-            case ',' -> type = Token.TokenType.COMMA;
-            case '(' -> type = Token.TokenType.LPAR;
-            case ')' -> type = Token.TokenType.RPAR;
-            case '{' -> type = Token.TokenType.LBRACE;
-            case '}' -> type = Token.TokenType.RBRACE;
-            case '[' -> type = Token.TokenType.LSQUARE;
-            case ']' -> type = Token.TokenType.RSQUARE;
-            case '?' -> type = Token.TokenType.QUEST;
-            case ':' -> type = Token.TokenType.COLON;
+            case ';' -> type = Token.Type.SEMI;
+            case '.' -> type = Token.Type.DOT;
+            case ',' -> type = Token.Type.COMMA;
+            case '(' -> type = Token.Type.LPAR;
+            case ')' -> type = Token.Type.RPAR;
+            case '{' -> type = Token.Type.LBRACE;
+            case '}' -> type = Token.Type.RBRACE;
+            case '[' -> type = Token.Type.LSQUARE;
+            case ']' -> type = Token.Type.RSQUARE;
+            case '?' -> type = Token.Type.QUEST;
+            case ':' -> type = Token.Type.COLON;
             case '+' -> {
                 next();
                 if (current == '+') {
-                    type = Token.TokenType.DPLUS;
+                    type = Token.Type.DPLUS;
                     next();
                 }
                 else if (current == '=') {
-                    type = Token.TokenType.EPLUS;
+                    type = Token.Type.EPLUS;
                     next();
                 }
                 else
-                    type = Token.TokenType.PLUS;
+                    type = Token.Type.PLUS;
                 last();
             }
             case '-' -> {
                 next();
                 if (current == '-') {
-                    type = Token.TokenType.DMINUS;
+                    type = Token.Type.DMINUS;
                     next();
                 }
                 else if (current == '=') {
-                    type = Token.TokenType.EMINUS;
+                    type = Token.Type.EMINUS;
                     next();
                 }
                 else {
-                    type = Token.TokenType.MINUS;
+                    type = Token.Type.MINUS;
                 }
                 last();
             }
@@ -340,18 +340,18 @@ public class Lexer {
                 if (current == '*') {
                     next();
                     if (current == '=') {
-                        type = Token.TokenType.EDSTAR;
+                        type = Token.Type.EDSTAR;
                         next();
                     }
                     else {
-                        type = Token.TokenType.DSTAR;
+                        type = Token.Type.DSTAR;
                     }
                 } else if (current == '=') {
-                    type = Token.TokenType.ESTAR;
+                    type = Token.Type.ESTAR;
                     next();
                 }
                 else {
-                    type = Token.TokenType.STAR;
+                    type = Token.Type.STAR;
                 }
                 last();
             }
@@ -364,104 +364,104 @@ public class Lexer {
                     token_comment_multi();
                     return;
                 } else if (current == '=') {
-                    type = Token.TokenType.ESLASH;
+                    type = Token.Type.ESLASH;
                     next();
                 }
                 else
-                    type = Token.TokenType.SLASH;
+                    type = Token.Type.SLASH;
                 last();
             }
             case '<' -> {
                 next();
                 if (current == '<') {
-                    type = Token.TokenType.DLESS;
+                    type = Token.Type.DLESS;
                     next();
                 }
                 else if (current == '=') {
-                    type = Token.TokenType.ELESS;
+                    type = Token.Type.ELESS;
                     next();
                 }
                 else
-                    type = Token.TokenType.LESS;
+                    type = Token.Type.LESS;
                 last();
             }
             case '>' -> {
                 next();
                 if (current == '>') {
-                    type = Token.TokenType.DMORE;
+                    type = Token.Type.DMORE;
                     next();
                 }
                 else if (current == '=') {
-                    type = Token.TokenType.EMORE;
+                    type = Token.Type.EMORE;
                     next();
                 }
                 else
-                    type = Token.TokenType.MORE;
+                    type = Token.Type.MORE;
                 last();
             }
             case '%' -> {
                 next();
                 if (current == '=') {
-                    type = Token.TokenType.EPERCENT;
+                    type = Token.Type.EPERCENT;
                     next();
                 }
                 else
-                    type = Token.TokenType.PERCENT;
+                    type = Token.Type.PERCENT;
                 last();
             }
             case '&' -> {
                 next();
                 if (current == '=') {
-                    type = Token.TokenType.EAND;
+                    type = Token.Type.EAND;
                     next();
                 }
                 else if (current == '&') {
-                    type = Token.TokenType.DAND;
+                    type = Token.Type.DAND;
                     next();
                 }
                 else
-                    type = Token.TokenType.AND;
+                    type = Token.Type.AND;
                 last();
             }
             case '|' -> {
                 next();
                 if (current == '=') {
-                    type = Token.TokenType.EOR;
+                    type = Token.Type.EOR;
                     next();
                 }
                 else if (current == '|') {
-                    type = Token.TokenType.DOR;
+                    type = Token.Type.DOR;
                     next();
                 }
                 else
-                    type = Token.TokenType.OR;
+                    type = Token.Type.OR;
                 last();
             }
             case '=' -> {
                 next();
                 if (current == '=') {
-                    type = Token.TokenType.DEQUAL;
+                    type = Token.Type.DEQUAL;
                     next();
                 }
                 else
-                    type = Token.TokenType.EQUAL;
+                    type = Token.Type.EQUAL;
                 last();
             }
             case '!' -> {
                 next();
                 if (current == '=') {
-                    type = Token.TokenType.NEQUAL;
+                    type = Token.Type.NEQUAL;
                     next();
                 }
                 else
-                    type = Token.TokenType.NOT;
+                    type = Token.Type.NOT;
                 last();
             }
-            default -> type = Token.TokenType.ENDFILE;
+            default -> type = Token.Type.ENDFILE;
         }
         next();
 
-        if(type == Token.TokenType.ENDFILE)
+        if(type == Token.Type.ENDFILE)
             LOGGER.log("[LEXER] неизвестный символ 0x"+(byte)current);
         else
         {

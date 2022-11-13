@@ -5,7 +5,7 @@ import axl.general.Value;
 
 public class Token {
 
-    public enum TokenType
+    public enum Type
     {
         WORD,
 
@@ -18,6 +18,7 @@ public class Token {
         DOUBLE,
         STRING,
         CHAR,
+        OBJECT,     // parser
 
         SEMI,       // ;
         DOT,        // .
@@ -69,17 +70,17 @@ public class Token {
         ENDFILE
     }
 
-    private final TokenType type;
+    private final Type type;
 
     private Value value = null;
 
-    public Token(TokenType type, Value value)
+    public Token(Type type, Value value)
     {
         this.type = type;
         this.value = value;
     }
 
-    public Token(TokenType type)
+    public Token(Type type)
     {
         this.type = type;
     }
@@ -89,268 +90,268 @@ public class Token {
         return value;
     }
 
-    public boolean equal(TokenType t)
+    public boolean equal(Type t)
     {
         return t == type;
     }
 
     public boolean is_eplus()
     {
-        return equal(TokenType.EPLUS);
+        return equal(Type.EPLUS);
     }
 
     public boolean is_eminus()
     {
-        return equal(TokenType.EMINUS);
+        return equal(Type.EMINUS);
     }
 
     public boolean is_estar()
     {
-        return equal(TokenType.ESTAR);
+        return equal(Type.ESTAR);
     }
 
     public boolean is_eslash()
     {
-        return equal(TokenType.ESLASH);
+        return equal(Type.ESLASH);
     }
 
     public boolean is_edstar()
     {
-        return equal(TokenType.EDSTAR);
+        return equal(Type.EDSTAR);
     }
 
     public boolean is_comma()
     {
-        return equal(TokenType.COMMA);
+        return equal(Type.COMMA);
     }
 
     public boolean is_lsquare()
     {
-        return equal(TokenType.LSQUARE);
+        return equal(Type.LSQUARE);
     }
 
     public boolean is_rsquare()
     {
-        return equal(TokenType.RSQUARE);
+        return equal(Type.RSQUARE);
     }
 
     public boolean is_dplus()
     {
-        return equal(TokenType.DPLUS);
+        return equal(Type.DPLUS);
     }
 
     public boolean is_dminus()
     {
-        return equal(TokenType.DMINUS);
+        return equal(Type.DMINUS);
     }
 
     public boolean is_dstar()
     {
-        return equal(TokenType.DSTAR);
+        return equal(Type.DSTAR);
     }
 
     public boolean is_dless()
     {
-        return equal(TokenType.DLESS);
+        return equal(Type.DLESS);
     }
 
     public boolean is_dmore()
     {
-        return equal(TokenType.DMORE);
+        return equal(Type.DMORE);
     }
 
     public boolean is_percent()
     {
-        return equal(TokenType.PERCENT);
+        return equal(Type.PERCENT);
     }
 
     public boolean is_and()
     {
-        return equal(TokenType.AND);
+        return equal(Type.AND);
     }
 
     public boolean is_or()
     {
-        return equal(TokenType.OR);
+        return equal(Type.OR);
     }
 
     public boolean is_less()
     {
-        return equal(TokenType.LESS);
+        return equal(Type.LESS);
     }
 
     public boolean is_more()
     {
-        return equal(TokenType.MORE);
+        return equal(Type.MORE);
     }
 
     public boolean is_eless()
     {
-        return equal(TokenType.ELESS);
+        return equal(Type.ELESS);
     }
 
     public boolean is_emore()
     {
-        return equal(TokenType.EMORE);
+        return equal(Type.EMORE);
     }
 
     public boolean is_dequal()
     {
-        return equal(TokenType.DEQUAL);
+        return equal(Type.DEQUAL);
     }
 
     public boolean is_nequal()
     {
-        return equal(TokenType.NEQUAL);
+        return equal(Type.NEQUAL);
     }
 
     public boolean is_dand()
     {
-        return equal(TokenType.DAND);
+        return equal(Type.DAND);
     }
 
     public boolean is_dor()
     {
-        return equal(TokenType.DOR);
+        return equal(Type.DOR);
     }
 
     public boolean is_dot()
     {
-        return equal(TokenType.DOT);
+        return equal(Type.DOT);
     }
 
     public boolean is_word()
     {
-        return equal(TokenType.WORD);
+        return equal(Type.WORD);
     }
 
     public boolean is_int()
     {
-        return equal(TokenType.INT);
+        return equal(Type.INT);
     }
 
     public boolean is_char()
     {
-        return equal(TokenType.CHAR);
+        return equal(Type.CHAR);
     }
 
     public boolean is_short()
     {
-        return equal(TokenType.SHORT);
+        return equal(Type.SHORT);
     }
 
     public boolean is_byte()
     {
-        return equal(TokenType.BYTE);
+        return equal(Type.BYTE);
     }
 
     public boolean is_boolean()
     {
-        return equal(TokenType.BOOLEAN);
+        return equal(Type.BOOLEAN);
     }
 
     public boolean is_long()
     {
-        return equal(TokenType.LONG);
+        return equal(Type.LONG);
     }
 
     public boolean is_float()
     {
-        return equal(TokenType.FLOAT);
+        return equal(Type.FLOAT);
     }
 
     public boolean is_double()
     {
-        return equal(TokenType.DOUBLE);
+        return equal(Type.DOUBLE);
     }
 
     public boolean is_string()
     {
-        return equal(TokenType.STRING);
+        return equal(Type.STRING);
     }
 
     public boolean is_semi()
     {
-        return equal(TokenType.SEMI);
+        return equal(Type.SEMI);
     }
 
     public boolean is_equal()
     {
-        return equal(TokenType.EQUAL);
+        return equal(Type.EQUAL);
     }
 
     public boolean is_plus()
     {
-        return equal(TokenType.PLUS);
+        return equal(Type.PLUS);
     }
 
     public boolean is_minus()
     {
-        return equal(TokenType.MINUS);
+        return equal(Type.MINUS);
     }
 
     public boolean is_star()
     {
-        return equal(TokenType.STAR);
+        return equal(Type.STAR);
     }
 
     public boolean is_slash()
     {
-        return equal(TokenType.SLASH);
+        return equal(Type.SLASH);
     }
 
     public boolean is_lpar()
     {
-        return equal(TokenType.LPAR);
+        return equal(Type.LPAR);
     }
 
     public boolean is_rpar()
     {
-        return equal(TokenType.RPAR);
+        return equal(Type.RPAR);
     }
 
     public boolean is_lbrace()
     {
-        return equal(TokenType.LBRACE);
+        return equal(Type.LBRACE);
     }
 
     public boolean is_rbrace()
     {
-        return equal(TokenType.RBRACE);
+        return equal(Type.RBRACE);
     }
 
     public boolean is_epercent()
     {
-        return equal(TokenType.EPERCENT);
+        return equal(Type.EPERCENT);
     }
 
     public boolean is_eand()
     {
-        return equal(TokenType.EAND);
+        return equal(Type.EAND);
     }
 
     public boolean is_eor()
     {
-        return equal(TokenType.EOR);
+        return equal(Type.EOR);
     }
 
     public boolean is_not()
     {
-        return equal(TokenType.NOT);
+        return equal(Type.NOT);
     }
 
     public boolean is_quest()
     {
-        return equal(TokenType.QUEST);
+        return equal(Type.QUEST);
     }
 
     public boolean is_colon()
     {
-        return equal(TokenType.COLON);
+        return equal(Type.COLON);
     }
 
     public boolean is_endfile()
     {
-        return equal(TokenType.ENDFILE);
+        return equal(Type.ENDFILE);
     }
 }
