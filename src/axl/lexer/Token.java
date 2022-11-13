@@ -49,8 +49,9 @@ public class Token {
         ESTAR,      // *=
         ESLASH,     // /=
         EDSTAR,     // **=
-
-        DSLASH,     // //
+        EPERCENT,   // %=
+        EAND,       // &=
+        EOR,        // |=
 
         LESS,       // <
         MORE,       // >
@@ -58,6 +59,7 @@ public class Token {
         EMORE,      // >=
         DEQUAL,     // ==
         NEQUAL,     // !=
+        NOT,        // !
 
         DAND,       // &&
         DOR,        // ||
@@ -168,11 +170,6 @@ public class Token {
     public boolean is_or()
     {
         return equal(TokenType.OR);
-    }
-
-    public boolean is_dslash()
-    {
-        return equal(TokenType.DSLASH);
     }
 
     public boolean is_less()
@@ -318,6 +315,26 @@ public class Token {
     public boolean is_rbrace()
     {
         return equal(TokenType.RBRACE);
+    }
+
+    public boolean is_epercent()
+    {
+        return equal(TokenType.EPERCENT);
+    }
+
+    public boolean is_eand()
+    {
+        return equal(TokenType.EAND);
+    }
+
+    public boolean is_eor()
+    {
+        return equal(TokenType.EOR);
+    }
+
+    public boolean is_not()
+    {
+        return equal(TokenType.NOT);
     }
 
     public boolean is_endfile()

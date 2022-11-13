@@ -5,8 +5,6 @@ import axl.general.*;
 
 import java.util.ArrayList;
 
-import static java.lang.System.exit;
-
 public class Lexer {
 
     private final String content;
@@ -14,11 +12,16 @@ public class Lexer {
     public Lexer(String content)
     {
         this.content = content;
-        LOGGER.log("[LEXER] обработка:\n\"\"\"\n"+content+"\"\"\"");
+        LOGGER.log("[LEXER] обработка:\n\"\"\"\n"+content+"\n\"\"\"");
         run();
     }
 
-    private ArrayList<Token> tokens = new ArrayList<>();
+    public ArrayList<Token> getTokens()
+    {
+        return tokens;
+    }
+
+    private final ArrayList<Token> tokens = new ArrayList<>();
     private int i = 0;
     private char current;
 
@@ -135,6 +138,14 @@ public class Lexer {
                     return;
                 }
                 last();
+            } else {
+                next();
+                if (!(current >= '0' && '9' >= current)) {
+                    last();
+                    token_op();
+                    return;
+                }
+                last();
             }
 
             next();
@@ -215,8 +226,186 @@ public class Lexer {
 
     private void token_op()
     {
-        LOGGER.log("[LEXER] неизвестный символ '"+current+"'");
+        Token.TokenType type = null;
+        switch (current) {
+            case ';' -> type = Token.TokenType.SEMI;
+            case '.' -> type = Token.TokenType.DOT;
+            case ',' -> type = Token.TokenType.COMMA;
+            case '(' -> type = Token.TokenType.LPAR;
+            case ')' -> type = Token.TokenType.RPAR;
+            case '{' -> type = Token.TokenType.LBRACE;
+            case '}' -> type = Token.TokenType.RBRACE;
+            case '[' -> type = Token.TokenType.LSQUARE;
+            case ']' -> type = Token.TokenType.RSQUARE;
+            case '+' -> {
+                next();
+                if (current == '+') {
+                    type = Token.TokenType.DPLUS;
+                    next();
+                }
+                else if (current == '=') {
+                    type = Token.TokenType.EPLUS;
+                    next();
+                }
+                else
+                    type = Token.TokenType.PLUS;
+                last();
+            }
+            case '-' -> {
+                next();
+                if (current == '-') {
+                    type = Token.TokenType.DMINUS;
+                    next();
+                }
+                else if (current == '=') {
+                    type = Token.TokenType.EMINUS;
+                    next();
+                }
+                else {
+                    type = Token.TokenType.MINUS;
+                }
+                last();
+            }
+            case '*' -> {
+                next();
+                if (current == '*') {
+                    next();
+                    if (current == '=') {
+                        type = Token.TokenType.EDSTAR;
+                        next();
+                    }
+                    else {
+                        type = Token.TokenType.DSTAR;
+                    }
+                } else if (current == '=') {
+                    type = Token.TokenType.ESTAR;
+                    next();
+                }
+                else {
+                    type = Token.TokenType.STAR;
+                }
+                last();
+            }
+            case '/' -> {
+                next();
+                if (current == '/') {
+                    token_comment_uno();
+                    return;
+                } else if (current == '*') {
+                    token_comment_multi();
+                    return;
+                } else if (current == '=') {
+                    type = Token.TokenType.ESLASH;
+                    next();
+                }
+                else
+                    type = Token.TokenType.SLASH;
+                last();
+            }
+            case '<' -> {
+                next();
+                if (current == '<') {
+                    type = Token.TokenType.DLESS;
+                    next();
+                }
+                else if (current == '=') {
+                    type = Token.TokenType.ELESS;
+                    next();
+                }
+                else
+                    type = Token.TokenType.LESS;
+                last();
+            }
+            case '>' -> {
+                next();
+                if (current == '>') {
+                    type = Token.TokenType.DMORE;
+                    next();
+                }
+                else if (current == '=') {
+                    type = Token.TokenType.EMORE;
+                    next();
+                }
+                else
+                    type = Token.TokenType.MORE;
+                last();
+            }
+            case '%' -> {
+                next();
+                if (current == '=') {
+                    type = Token.TokenType.EPERCENT;
+                    next();
+                }
+                else
+                    type = Token.TokenType.PERCENT;
+                last();
+            }
+            case '&' -> {
+                next();
+                if (current == '=') {
+                    type = Token.TokenType.EAND;
+                    next();
+                }
+                else if (current == '&') {
+                    type = Token.TokenType.DAND;
+                    next();
+                }
+                else
+                    type = Token.TokenType.AND;
+                last();
+            }
+            case '|' -> {
+                next();
+                if (current == '=') {
+                    type = Token.TokenType.EOR;
+                    next();
+                }
+                else if (current == '|') {
+                    type = Token.TokenType.DOR;
+                    next();
+                }
+                else
+                    type = Token.TokenType.OR;
+                last();
+            }
+            case '=' -> {
+                next();
+                if (current == '=') {
+                    type = Token.TokenType.DEQUAL;
+                    next();
+                }
+                else
+                    type = Token.TokenType.EQUAL;
+                last();
+            }
+            case '!' -> {
+                next();
+                if (current == '=') {
+                    type = Token.TokenType.NEQUAL;
+                    next();
+                }
+                else
+                    type = Token.TokenType.NOT;
+                last();
+            }
+            default -> type = Token.TokenType.ENDFILE;
+        }
         next();
+
+        if(type == Token.TokenType.ENDFILE)
+            LOGGER.log("[LEXER] неизвестный символ '"+current+"'");
+        else
+        {
+            LOGGER.log("[LEXER] оператор '"+type+"'");
+            add(new Token(type));
+        }
+    }
+
+    private void token_comment_multi() {
+    }
+
+    private void token_comment_uno() {
+
     }
 
 }
