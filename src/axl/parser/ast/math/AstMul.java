@@ -5,13 +5,13 @@ import reloc.org.objectweb.asm.MethodVisitor;
 
 import static reloc.org.objectweb.asm.Opcodes.*;
 
-public class AstSub extends AstMath{
+public class AstMul extends AstMath{
 
-    public AstSub() {
+    public AstMul() {
         super();
     }
 
-    public AstSub(Ast left, Ast right) {
+    public AstMul(Ast left, Ast right) {
         super(left, right);
     }
 
@@ -24,12 +24,12 @@ public class AstSub extends AstMath{
     public void codegen(MethodVisitor mv) {
         super.codegen(mv);
         if (is_double())
-            mv.visitInsn(DSUB);
+            mv.visitInsn(DMUL);
         else if (is_float())
-            mv.visitInsn(FSUB);
+            mv.visitInsn(FMUL);
         else if(is_long())
-            mv.visitInsn(LSUB);
+            mv.visitInsn(LMUL);
         else
-            mv.visitInsn(ISUB);
+            mv.visitInsn(IMUL);
     }
 }

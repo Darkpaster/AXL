@@ -52,6 +52,16 @@ public class AstGetLocalVar extends Ast{
         return type == Token.Type.LONG;
     }
 
+    public boolean is_double()
+    {
+        return type == Token.Type.DOUBLE;
+    }
+
+    public boolean is_float()
+    {
+        return type == Token.Type.FLOAT;
+    }
+
     public boolean is_char()
     {
         return type == Token.Type.CHAR;

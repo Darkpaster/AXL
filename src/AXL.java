@@ -1,11 +1,7 @@
 import axl.LOGGER;
-import axl.general.ValueByte;
-import axl.general.ValueInt;
-import axl.general.ValueLong;
-import axl.general.ValueShort;
+import axl.general.*;
 import axl.lexer.Lexer;
-import axl.parser.ast.math.AstSub;
-import axl.parser.ast.math.AstSum;
+import axl.parser.ast.math.*;
 import reloc.org.objectweb.asm.AnnotationVisitor;
 import reloc.org.objectweb.asm.ClassWriter;
 import reloc.org.objectweb.asm.FieldVisitor;
@@ -23,60 +19,68 @@ public class AXL {
 
     public static void main(String[] args) throws IOException {
 
-//        long a = 10000000000L;
-//        byte b = 12;
-//        byte c = 11;
-//        long d = a-b+c;
-//
-//        ClassWriter cw = new ClassWriter(0);
-//        FieldVisitor fv;
-//        MethodVisitor mv;
-//        AnnotationVisitor av0;
-//
-//        cw.visit(49, ACC_PUBLIC + ACC_SUPER, "Test", null, "java/lang/Object", null);
-//
-//        cw.visitSource("Test.java", null);
-//
-//        {
-//            mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
-//            mv.visitVarInsn(ALOAD, 0);
-//            mv.visitMethodInsn(INVOKESPECIAL,
-//                    "java/lang/Object",
-//                    "<init>",
-//                    "()V");
-//            mv.visitInsn(RETURN);
-//            mv.visitMaxs(1, 1);
-//            mv.visitEnd();
-//        }
-//        {
-//            mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
-//
-//
-//            mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-////            mv.visitLdcInsn("hello");
-//            AstSum math = new AstSum();
-//            math.left = new ValueByte((byte) 11);
-//            AstSub math2 = new AstSub();
-//            math2.left = new ValueLong(10000000000L);
-//            math2.right = new ValueByte((byte) 12);
-//            math.right = math2;
-//            math.codegen(mv);
-//            mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(J)V");
-//            mv.visitInsn(RETURN);
-//            mv.visitMaxs(7, 1);
-//            mv.visitEnd();
-//        }
-//        cw.visitEnd();
-//
-//        byte[] bytes = cw.toByteArray();
-//        try (FileOutputStream stream = new FileOutputStream("C:\\Users\\home\\Documents\\GitHub\\AXL\\src\\Test.class")) {
-//            stream.write(bytes);
-//        }
+        int b = 5;
+        long c = 322222222222222222L;
+        double d = b%c;
 
-        file = Files.readString(Paths.get("C:\\Users\\home\\Documents\\GitHub\\AXL\\src\\Test.axl"));
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        MethodVisitor mv;
 
-        Lexer lexer = new Lexer(file);
-        LOGGER.save();
+        cw.visit(49, ACC_PUBLIC + ACC_SUPER, "Test", null, "java/lang/Object", null);
+
+        cw.visitSource("Test.java", null);
+
+        {
+            mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V");
+            mv.visitInsn(RETURN);
+            mv.visitMaxs(1,1);
+            mv.visitEnd();
+        }
+        {
+            mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
+
+
+            mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+
+            AstRem math = new AstRem(
+                    new AstDiv(
+                            new ValueByte((byte) 100),
+                            new AstMul(
+                                    new ValueByte((byte) 2),
+                                    new ValueByte((byte) 5)
+                            )
+                    ),
+                    new AstPow(
+                            new AstSub(
+                                    new ValueByte((byte) 100),
+                                    new AstSum(
+                                            new ValueByte((byte) 5),
+                                            new ValueByte((byte) 5)
+                                    )
+                            ),
+                            new ValueByte((byte) 2)
+                    )
+            ); // (100/(2*5))%((100-(5+5))**(2))
+            math.codegen(mv);
+
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(D)V");
+            mv.visitMaxs(1,1);
+            mv.visitInsn(RETURN);
+            mv.visitEnd();
+        }
+        cw.visitEnd();
+
+        byte[] bytes = cw.toByteArray();
+        try (FileOutputStream stream = new FileOutputStream("C:\\Users\\home\\Documents\\GitHub\\AXL\\src\\Test.class")) {
+            stream.write(bytes);
+        }
+
+//        file = Files.readString(Paths.get("C:\\Users\\home\\Documents\\GitHub\\AXL\\src\\Test.axl"));
+//
+//        Lexer lexer = new Lexer(file);
+//        LOGGER.save();
 
 //        { yuyg
 //            Class<?> c = Class.forName("java.lang.System");
