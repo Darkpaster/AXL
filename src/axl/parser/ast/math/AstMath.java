@@ -1,15 +1,13 @@
 package axl.parser.ast.math;
 
-import axl.LOGGER;
 import axl.general.Value;
 import axl.parser.ast.Ast;
 import axl.parser.ast.AstGetLocalVar;
-import reloc.org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.MethodVisitor;
 
-import static reloc.org.objectweb.asm.Opcodes.*;
-import static reloc.org.objectweb.asm.Opcodes.I2L;
+import static org.objectweb.asm.Opcodes.*;
 
-public class AstMath extends Ast {
+public class AstMath implements Ast {
     public Ast right;
     public Ast left;
 
@@ -25,89 +23,58 @@ public class AstMath extends Ast {
     }
 
     @Override
-    public boolean is_math() {
-        return true;
-    }
-
-    @Override
     public void codegen(MethodVisitor mv) {
         boolean left_is_long = left_is_long();
         boolean right_is_long = right_is_long();
         boolean left_is_double = left_is_double();
         boolean right_is_double = right_is_double();
 
-        if(left instanceof AstMath)
-        {
-            left.codegen(mv);
-        } else if (left instanceof Value) {
-            if(((Value) left).is_byte())
-                mv.visitIntInsn(BIPUSH, ((Value) left).getByte());
-            else if(((Value) left).is_short())
-                mv.visitIntInsn(SIPUSH, ((Value) left).getShort());
-            else if(((Value) left).is_int())
-                mv.visitLdcInsn(((Value) left).getInt());
-            else if(((Value) left).is_long())
-                mv.visitLdcInsn(((Value) left).getLong());
-            else if(((Value) left).is_float())
-                mv.visitLdcInsn(((Value) left).getFloat());
-            else if(((Value) left).is_double())
-                mv.visitLdcInsn(((Value) left).getDouble());
-            else LOGGER.log("[CODE-GEN] недопустимый (left)");
-        } else if (left instanceof AstGetLocalVar) {
-            left.codegen(mv);
-        }
+        left.codegen(mv);
 
         if (right_is_double && (!left_is_double)) {
             if(left_is_long)
                 mv.visitInsn(L2D);
-            else if (left_is_float() && !(left instanceof Value))
+            else if (left_is_float())
                 mv.visitInsn(F2D);
             else if(!left_is_float())
                 mv.visitInsn(I2D);
         }
-        else if(right_is_long && (!left_is_long)) {
-            if(left_is_double && !(left instanceof Value))
-                mv.visitInsn(D2L);
-            else if (left_is_float() && !(left instanceof Value))
+        else if(right_is_float() && (!left_is_float())) {
+            if(left_is_double)
+                mv.visitInsn(D2F);
+            else if (left_is_long)
+                mv.visitInsn(L2F);
+            else if(!left_is_long())
+                mv.visitInsn(I2F);
+        }
+        else if(right_is_long && (!left_is_long) && (!left_is_float())) {
+            if (left_is_float())
                 mv.visitInsn(F2L);
             else if(!left_is_float() && !left_is_double)
                 mv.visitInsn(I2L);
         }
 
-        if(right instanceof AstMath)
-        {
-            right.codegen(mv);
-        } else if (right instanceof Value) {
-            if(((Value) right).is_byte())
-                mv.visitIntInsn(BIPUSH, ((Value) right).getByte());
-            else if(((Value) right).is_short())
-                mv.visitIntInsn(SIPUSH, ((Value) right).getShort());
-            else if(((Value) right).is_int())
-                mv.visitLdcInsn(((Value) right).getInt());
-            else if(((Value) right).is_long())
-                mv.visitLdcInsn(((Value) right).getLong());
-            else if(((Value) right).is_float())
-                mv.visitLdcInsn(((Value) right).getFloat());
-            else if(((Value) right).is_double())
-                mv.visitLdcInsn(((Value) right).getDouble());
-            else LOGGER.log("[CODE-GEN] недопустимый тип (right)");
-        } else if (right instanceof AstGetLocalVar) {
-            right.codegen(mv);
-        }
+        right.codegen(mv);
 
 
         if (left_is_double && (!right_is_double)) {
             if(right_is_long)
                 mv.visitInsn(L2D);
-            else if (right_is_float() && !(right instanceof Value))
+            else if (right_is_float())
                 mv.visitInsn(F2D);
             else if(!right_is_float())
                 mv.visitInsn(I2D);
         }
-        else if(left_is_long && (!right_is_long)) {
-            if(right_is_double && !(right instanceof Value))
-                mv.visitInsn(D2L);
-            else if (right_is_float() && !(right instanceof Value))
+        else if(left_is_float() && (!right_is_float())) {
+            if(right_is_double)
+                mv.visitInsn(D2F);
+            else if (right_is_long)
+                mv.visitInsn(L2F);
+            else if(!right_is_long())
+                mv.visitInsn(I2F);
+        }
+        else if(left_is_long && (!right_is_long) && (!right_is_float())) {
+            if (right_is_float())
                 mv.visitInsn(F2L);
             else if(!right_is_float() && !right_is_double)
                 mv.visitInsn(I2L);
@@ -201,5 +168,43 @@ public class AstMath extends Ast {
         else if (right instanceof AstMath)
             right_is_float = ((AstMath) right).is_float();
         return right_is_float;
+    }
+
+    public boolean is_bool()
+    {
+        return left_is_bool() || right_is_bool();
+    }
+
+    public boolean left_is_bool()
+    {
+        boolean left_is_bool = false;
+        if(left instanceof AstGetLocalVar)
+            left_is_bool = ((AstGetLocalVar) left).is_bool();
+        else if (left instanceof Value)
+            left_is_bool = ((Value) left).is_boolean();
+        else if (left instanceof AstMath)
+            left_is_bool = ((AstMath) left).is_bool();
+        return left_is_bool;
+    }
+
+    public boolean right_is_bool()
+    {
+        boolean right_is_bool = false;
+        if(right instanceof AstGetLocalVar)
+            right_is_bool = ((AstGetLocalVar) right).is_bool();
+        else if (right instanceof Value)
+            right_is_bool = ((Value) right).is_boolean();
+        else if (right instanceof AstMath)
+            right_is_bool = ((AstMath) right).is_bool();
+        return right_is_bool;
+    }
+
+    public char get_type_jvm()
+    {
+        if(is_double()) return 'D';
+        if(is_float())  return 'F';
+        if(is_long())   return 'J';
+        if(is_bool())   return 'Z';
+        return 'I';
     }
 }

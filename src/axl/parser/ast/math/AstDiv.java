@@ -1,9 +1,9 @@
 package axl.parser.ast.math;
 
 import axl.parser.ast.Ast;
-import reloc.org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.MethodVisitor;
 
-import static reloc.org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.*;
 
 public class AstDiv extends AstMath{
 
@@ -13,11 +13,6 @@ public class AstDiv extends AstMath{
 
     public AstDiv(Ast left, Ast right) {
         super(left, right);
-    }
-
-    @Override
-    public boolean is_sub() {
-        return true;
     }
 
     @Override

@@ -4,10 +4,10 @@ import axl.LOGGER;
 import axl.general.Value;
 import axl.parser.ast.Ast;
 import axl.parser.ast.AstGetLocalVar;
-import reloc.org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.MethodVisitor;
 
-import static reloc.org.objectweb.asm.Opcodes.*;
-import static reloc.org.objectweb.asm.Opcodes.I2L;
+import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.I2L;
 
 public class AstPow extends AstMath{
 
@@ -17,11 +17,6 @@ public class AstPow extends AstMath{
 
     public AstPow(Ast left, Ast right) {
         super(left, right);
-    }
-
-    @Override
-    public boolean is_sub() {
-        return true;
     }
 
     @Override

@@ -1,9 +1,9 @@
 package axl.parser.ast.math;
 
 import axl.parser.ast.Ast;
-import reloc.org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.MethodVisitor;
 
-import static reloc.org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.*;
 
 public class AstSum extends AstMath{
 
@@ -13,11 +13,6 @@ public class AstSum extends AstMath{
 
     public AstSum(Ast left, Ast right) {
         super(left, right);
-    }
-
-    @Override
-    public boolean is_sum() {
-        return true;
     }
 
     @Override

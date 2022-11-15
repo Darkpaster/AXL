@@ -10,7 +10,7 @@ import java.util.Date;
 import static java.lang.System.exit;
 
 public class LOGGER {
-    private static StringBuilder log = new StringBuilder();
+    private static final StringBuilder log = new StringBuilder();
 
     public static void log(String text)
     {

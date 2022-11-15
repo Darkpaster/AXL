@@ -1,4 +1,4 @@
 package axl.parser.ast;
 
-public class AstClassDefinition extends Ast{
+public class AstClassDefinition implements Ast {
 }

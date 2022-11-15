@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="reloc-asm-all-5.0.3" level="project" />
+    <orderEntry type="library" name="asm-all-6.0_BETA" level="project" />
+    <orderEntry type="library" name="asm-9.4" level="project" />
   </component>
 </module>

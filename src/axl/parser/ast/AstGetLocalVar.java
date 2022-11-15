@@ -2,11 +2,11 @@ package axl.parser.ast;
 
 import axl.LOGGER;
 import axl.lexer.Token;
-import reloc.org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.MethodVisitor;
 
-import static reloc.org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.*;
 
-public class AstGetLocalVar extends Ast{
+public class AstGetLocalVar implements Ast {
     public final String name;
     public final short id;
     public final Token.Type type; // int, float...
@@ -16,11 +16,6 @@ public class AstGetLocalVar extends Ast{
         this.name = name;
         this.id = id;
         this.type = type;
-    }
-
-    @Override
-    public boolean is_get_local_var() {
-        return true;
     }
 
     @Override
@@ -70,5 +65,10 @@ public class AstGetLocalVar extends Ast{
     public boolean is_object()
     {
         return type == Token.Type.OBJECT;
+    }
+
+    public boolean is_bool()
+    {
+        return type == Token.Type.BOOLEAN;
     }
 }
