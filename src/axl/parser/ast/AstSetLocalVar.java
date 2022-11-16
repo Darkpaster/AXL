@@ -6,36 +6,28 @@ import org.objectweb.asm.MethodVisitor;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class AstGetLocalVar implements Ast {
-    public final String name;
+public class AstSetLocalVar implements Ast {
+    public final int id;
     public final Token.Type type; // int, float...
+    public final Ast value;
 
-    public AstGetLocalVar(String name, Token.Type type)
+    public AstSetLocalVar(int id, Token.Type type, Ast value)
     {
-        this.name = name;
+        this.id = id;
         this.type = type;
+        this.value = value;
     }
 
     @Override
     public void codegen(MethodVisitor mv) {
-        int id  = AstLocalVarDefinition.get_var(name).id;
-        if(is_byte() || is_short() || is_int() || is_bool() || is_char()) mv.visitVarInsn(ILOAD, id);
-        else if (is_long()) mv.visitVarInsn(LLOAD, id);
-        else if (is_float()) mv.visitVarInsn(FLOAD, id);
-        else if (is_double()) mv.visitVarInsn(DLOAD, id);
-        else if (is_object()) mv.visitVarInsn(ALOAD, id);
-        else LOGGER.log("[CODE-GEN] неизвестный тип объекта");
-    }
+        value.codegen(mv);
 
-    public String get_type_jvm()
-    {
-        if(is_double()) return "D";
-        if(is_float())  return "F";
-        if(is_long())   return "J";
-        if(is_bool())   return "Z";
-        if(is_char())   return "C";
-        if(is_object()) return "L"+AstLocalVarDefinition.get_var(name).type.getValue().getString()+';';
-        return "I";
+        if(is_byte() || is_short() || is_int() || is_bool() || is_char()) mv.visitIntInsn(ISTORE, id);
+        else if (is_long()) mv.visitIntInsn(LSTORE, id);
+        else if (is_float()) mv.visitIntInsn(FSTORE, id);
+        else if (is_double()) mv.visitIntInsn(DSTORE, id);
+        else if (is_object()) mv.visitIntInsn(ASTORE, id);
+        else LOGGER.log("[CODE-GEN] неизвестный тип объекта");
     }
 
     public boolean is_byte()

@@ -85,6 +85,10 @@ public class Token {
         this.type = type;
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public Value getValue()
     {
         return value;
@@ -248,6 +252,11 @@ public class Token {
     public boolean is_boolean()
     {
         return equal(Type.BOOLEAN);
+    }
+
+    public boolean is_object()
+    {
+        return equal(Type.OBJECT);
     }
 
     public boolean is_long()

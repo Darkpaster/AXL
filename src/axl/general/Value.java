@@ -22,7 +22,7 @@ public class Value implements Ast {
         if(this.is_string())
             mv.visitLdcInsn(value_string);
         else if(is_char())
-            mv.visitIntInsn(CALOAD, value_char);
+            mv.visitIntInsn(BIPUSH, value_char);
         else if(is_long())
             mv.visitLdcInsn(value_long);
         else if(is_int())
