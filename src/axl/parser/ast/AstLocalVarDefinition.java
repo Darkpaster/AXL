@@ -63,19 +63,4 @@ public class AstLocalVarDefinition
             this.id = AstLocalVarDefinition.vars_i++;
         }
     }
-
-    public static void visitFrame(MethodVisitor mv)
-    {
-        Object[] types = new Object[vars_i];
-        int i = 0;
-        for(Var var: vars)
-        {
-            Token type = var.type;
-            if(type.is_long() || type.is_float() || type.is_double()) types[i] = LONG;
-            else if (type.is_string()) types[i] = "Ljava/lang/String;";
-            else types[i] = INTEGER;
-            i++;
-        }
-        mv.visitFrame(F_NEW, vars_i, types, 0, null);
-    }
 }
