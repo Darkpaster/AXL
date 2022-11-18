@@ -19,6 +19,7 @@ public class Token {
         STRING,
         CHAR,
         OBJECT,     // parser
+        ARRAY,      // parser
 
         SEMI,       // ;
         DOT,        // .
