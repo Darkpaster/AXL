@@ -17,9 +17,23 @@ public class Parser
         this.current = next();
     }
 
-    public void next()
+    private void next() // Переход к следующему токену
     {
-        if(i < this.tokens.size())
+        if (i < tokens.size())
+            current = tokens.get(i++);
+        else
+            current = new Token(Token.Type.ENDFILE);
+    }
 
+    private void last() // Переход к прошлому токену
+    {
+        if (i >= 0)
+            current = tokens.get(--i);
+    }
+
+    private void last(int count) // Переход к прошлому токену
+    {
+        for (int x = 0; x < count; x++)
+            last();
     }
 }
