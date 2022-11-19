@@ -1,12 +1,12 @@
 package axl.parser;
 
-import axl.parser.ast.*;
-import axl.lexer.*;
+import axl.lexer.Token;
+
 import java.util.ArrayList;
 
 public class Parser
 {
-    private ArrayList<Token> tokens;
+    private final ArrayList<Token> tokens;
     private Token current;
     private int i;
 
@@ -14,7 +14,7 @@ public class Parser
     {
         this.i = 0;
         this.tokens = tokens;
-        this.current = next();
+        next();
     }
 
     private void next() // Переход к следующему токену
