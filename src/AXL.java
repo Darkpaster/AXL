@@ -21,7 +21,7 @@ public class AXL {
     public static String file;
 
     public static void main(String[] args) throws IOException, NoSuchMethodException, ClassNotFoundException, NoSuchFieldException {
-        Lexer lexer = new Lexer("(1+1-2*32)");
+        Lexer lexer = new Lexer("-1+-1");
         Parser parser = new Parser(lexer.getTokens());
         ArrayList<Token.Type> end = new ArrayList<>();
         end.add(ENDFILE);
@@ -44,13 +44,13 @@ public class AXL {
 
         {
             mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
-//            mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+            mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
 //
-////            Ast math = parser.parse_expr(end);
-////            math.codegen(mv);
+            Ast math = parser.parse_expr(end);
+            math.codegen(mv);
 //            mv.visitLdcInsn("Hello");
-//
-//            mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V");
+
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "("+((AstMath)math).get_type_jvm()+")V");
             mv.visitMaxs(1, 1);
             mv.visitInsn(RETURN);
             mv.visitEnd();
@@ -58,10 +58,13 @@ public class AXL {
         cw.visitEnd();
 
         byte[] bytes = cw.toByteArray();
-        try (FileOutputStream stream = new FileOutputStream("C:\\Users\\anton\\Documents\\GitHub\\AXL\\out\\Test.class")) {
+        try (FileOutputStream stream = new FileOutputStream("C:\\Users\\home\\Documents\\GitHub\\AXL\\out\\Test.class")) {
             stream.write(bytes);
         }
     }
+
+
+
 //            AstRem math = new AstRem(
 //                    new AstDiv(
 //                            new ValueByte((byte) 100),
