@@ -1,0 +1,13 @@
+[LEXER] обработка:
+"""
+sum()+1*a
+"""
+[LEXER] слово "sum"
+[LEXER] оператор 'LPAR'
+[LEXER] оператор 'RPAR'
+[LEXER] оператор 'PLUS'
+[LEXER] число byte "1"
+[LEXER] оператор 'STAR'
+[LEXER] слово "a"
+[LEXER] конец файла
+[CODE-GEN] переменная 'a' не была инициализирована

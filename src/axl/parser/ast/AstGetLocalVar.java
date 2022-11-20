@@ -10,10 +10,10 @@ public class AstGetLocalVar implements Ast {
     public final String name;
     public final Token.Type type; // int, float...
 
-    public AstGetLocalVar(String name, Token.Type type)
+    public AstGetLocalVar(String name)
     {
         this.name = name;
-        this.type = type;
+        this.type = AstLocalVarDefinition.get_var(name).type.getType();
     }
 
     @Override

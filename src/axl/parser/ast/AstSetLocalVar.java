@@ -23,10 +23,10 @@ public class AstSetLocalVar implements Ast {
         value.codegen(mv);
 
         if(is_byte() || is_short() || is_int() || is_bool() || is_char()) mv.visitIntInsn(ISTORE, id);
-        else if (is_long()) mv.visitIntInsn(LSTORE, id);
-        else if (is_float()) mv.visitIntInsn(FSTORE, id);
-        else if (is_double()) mv.visitIntInsn(DSTORE, id);
-        else if (is_object()) mv.visitIntInsn(ASTORE, id);
+        else if (is_long()) mv.visitVarInsn(LSTORE, id);
+        else if (is_float()) mv.visitVarInsn(FSTORE, id);
+        else if (is_double()) mv.visitVarInsn(DSTORE, id);
+        else if (is_object()) mv.visitVarInsn(ASTORE, id);
         else LOGGER.log("[CODE-GEN] неизвестный тип объекта");
     }
 

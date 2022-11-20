@@ -11,7 +11,7 @@ public class Lexer {
 
     public Lexer(String content)
     {
-        this.content = content;
+        this.content = content+" ";
         LOGGER.log("[LEXER] обработка:\n\"\"\"\n"+content+"\n\"\"\"");
         run();
     }
@@ -70,7 +70,7 @@ public class Lexer {
                 continue;
             }
 
-            if ((current >= '0' && '9' >= current) || current == '-' || current == '.') {
+            if ((current >= '0' && '9' >= current) || current == '.') {
                 token_number();
                 continue;
             }
@@ -193,13 +193,11 @@ public class Lexer {
         StringBuilder str = new StringBuilder();
         boolean type = false;
 
-        if(current == '-' || current == '.')
+        if(current == '.')
         {
             str.append(current);
 
-            if(current == '.') {
-                type = true;
-            }
+            type = true;
             next();
             if(!(current >= '0' && '9' >= current))
             {
