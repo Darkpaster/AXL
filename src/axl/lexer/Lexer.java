@@ -1,7 +1,7 @@
 package axl.lexer;
 
 import axl.LOGGER;
-import axl.general.*;
+import axl.general.Values.*;
 
 import java.util.ArrayList;
 

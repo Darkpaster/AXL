@@ -1,7 +1,7 @@
 package axl.lexer;
 
 
-import axl.general.Value;
+import axl.general.Values.Value;
 
 public class Token {
 
