@@ -40,7 +40,7 @@ public class AXL {
         cw.visit(49, ACC_PUBLIC + ACC_SUPER, "Test", null, "java/lang/Object", null);
 
         cw.visitSource("Test.java", null);
-
+ 
         {
             mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
             mv.visitVarInsn(ALOAD, 0);
