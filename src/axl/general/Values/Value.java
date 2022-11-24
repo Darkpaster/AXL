@@ -45,7 +45,7 @@ public class Value extends Ast {
     }
 
     @Override
-    public void codegen(ClassWriter mv) {
+    public void codegen(ClassWriter cw) {
         LOGGER.log("[CODE-GEN] вызов 'codegen()' у неверного класса.", true);
     }
 

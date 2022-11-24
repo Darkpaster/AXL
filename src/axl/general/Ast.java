@@ -5,9 +5,17 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
 public abstract class Ast {
-    public abstract void codegen(MethodVisitor mv);
+    public void codegen(MethodVisitor mv){
+        LOGGER.log("[CODE-GEN] вызов 'codegen(mv)' у неверного класса", true);
+    }
 
-    public abstract void codegen(ClassWriter mv);
+    public void codegen(ClassWriter cw){
+        LOGGER.log("[CODE-GEN] вызов 'codegen(cw)' у неверного класса", true);
+    }
+
+    public void codegen(){
+        LOGGER.log("[CODE-GEN] вызов 'codegen()' у неверного класса", true);
+    }
 
     public String get_type_jvm()
     {
