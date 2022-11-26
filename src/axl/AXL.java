@@ -23,13 +23,12 @@ Empty dream: by шиза
 */
 package axl;
 
-import axl.general.Ast;
-import axl.general.Values.Value;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.invoke.StringConcatFactory;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -39,8 +38,10 @@ public class AXL {
 
     public static void main(String[] args) throws IOException {
         boolean is_compile = true;
-        System.out.println("---");
 
+        String s = "str";
+        int i = 22;
+        System.out.println(s+i);
 
         if(is_compile)
         {
