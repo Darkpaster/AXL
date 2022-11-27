@@ -1,6 +1,7 @@
 package axl.lexer;
 
 
+import axl.LOGGER;
 import axl.general.Values.Value;
 
 public class Token {
@@ -250,7 +251,7 @@ public class Token {
         return equal(Type.BYTE);
     }
 
-    public boolean is_boolean()
+    public boolean is_bool()
     {
         return equal(Type.BOOLEAN);
     }
@@ -363,5 +364,20 @@ public class Token {
     public boolean is_endfile()
     {
         return equal(Type.ENDFILE);
+    }
+
+    public String get_type_jvm()
+    {
+        if (is_char()) return "C";
+        if (is_byte()) return "B";
+        if (is_short()) return "S";
+        if (is_int()) return "I";
+        if (is_float()) return "F";
+        if (is_double()) return "D";
+        if (is_long()) return "J";
+        if (is_bool()) return "Z";
+        if (is_object()) return (String)value.getValue();
+        LOGGER.log("[CODE-GEN] неизвестный тип", true);
+        return "ERROR";
     }
 }

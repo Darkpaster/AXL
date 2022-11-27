@@ -92,4 +92,33 @@ public class Value extends Ast {
     public boolean is_byte() {
         return false;
     }
+
+    public static int priority(String type)
+    {
+        switch (type)
+        {
+            case "Z", "C", "B", "S", "I" -> {
+                return 1;
+            }
+            case "J" -> {
+                return 2;
+            }
+            case "F"  -> {
+                return 3;
+            }
+            case "D"  -> {
+                return 4;
+            }
+        }
+        LOGGER.log("[CODE-GEN] приоритет у некорректного типа", true);
+        return 0;
+    }
+
+    public static String priority_type_jvm(String type1, String type2)
+    {
+
+        if (Value.priority(type1) > Value.priority(type2))
+            return type1;
+        return type2;
+    }
 }

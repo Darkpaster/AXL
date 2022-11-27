@@ -26,22 +26,29 @@ package axl;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.invoke.StringConcatFactory;
 
 import static org.objectweb.asm.Opcodes.*;
 
 public class AXL {
 
     public static final int CLASSES_VERSION = 49;
+    public static final boolean compile_local_var_ref = true;
 
-    public static void main(String[] args) throws IOException {
+    public int test(String a, int b)
+    {
+        System.out.println(a);
+        System.out.println(b);
+        System.out.println(this);
+        int c = 2;
+        return c;
+    }
+
+    public static void main(String[] args) {
+
         boolean is_compile = true;
-
-        String s = "str";
-        int i = 22;
-        System.out.println(s+i);
 
         if(is_compile)
         {
@@ -75,6 +82,8 @@ public class AXL {
             byte[] bytes = cw.toByteArray();
             try (FileOutputStream stream = new FileOutputStream("./out/Test.class")) {
                 stream.write(bytes);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }

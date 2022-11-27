@@ -1,6 +1,7 @@
 package axl.general;
 
 import axl.LOGGER;
+import axl.general.LocalVars.VarsCounter;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
