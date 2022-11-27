@@ -23,10 +23,13 @@ Empty dream: by шиза
 */
 package axl;
 
+import axl.general.ClassEnumerator;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -37,18 +40,16 @@ public class AXL {
     public static final int CLASSES_VERSION = 49;
     public static final boolean compile_local_var_ref = true;
 
-    public int test(String a, int b)
-    {
-        System.out.println(a);
-        System.out.println(b);
-        System.out.println(this);
-        int c = 2;
-        return c;
-    }
-
     public static void main(String[] args) {
 
         boolean is_compile = true;
+        ScanResult scanResult = new ClassGraph().whitelistPackages("axl.general").scan();
+        for (ClassInfo classInfo : scanResult.getAllClasses()) {
+            System.out.println(classInfo.getName());
+        }
+        System.out.println(scanResult.getAllClasses().size());
+        //System.out.println(ClassEnumerator.getPackageClasses("java.lang"));
+
 
         if(is_compile)
         {

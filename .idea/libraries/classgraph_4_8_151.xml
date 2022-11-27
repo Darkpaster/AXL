@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="classgraph-4.8.151">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/classgraph-4.8.151.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

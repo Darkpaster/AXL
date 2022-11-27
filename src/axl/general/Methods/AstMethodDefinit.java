@@ -12,15 +12,12 @@ import org.objectweb.asm.MethodVisitor;
 
 import java.util.ArrayList;
 
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ACC_STATIC;
-
 public class AstMethodDefinit extends Ast {
 
     public String name;
     public ArrayList<Ast> body;
     public int mod;
-    public String descriptor = "()V";
+    public String descriptor; // (Ljava.lang.String;I)V
     public ArrayList<String> exceptions = new ArrayList<>();
 
     public AstMethodDefinit(String name, ArrayList<Ast> body, int mod, String descriptor)
@@ -28,7 +25,7 @@ public class AstMethodDefinit extends Ast {
         this.name = name;
         this.body = body;
         this.mod = mod;
-        // mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
+        this.descriptor = descriptor;
     }
 
     @Override

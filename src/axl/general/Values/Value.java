@@ -95,19 +95,22 @@ public class Value extends Ast {
 
     public static int priority(String type)
     {
-        switch (type)
+        switch (type.charAt(0))
         {
-            case "Z", "C", "B", "S", "I" -> {
+            case 'Z', 'C', 'B', 'S', 'I' -> {
                 return 1;
             }
-            case "J" -> {
+            case 'J'  -> {
                 return 2;
             }
-            case "F"  -> {
+            case 'F'  -> {
                 return 3;
             }
-            case "D"  -> {
+            case 'D'  -> {
                 return 4;
+            }
+            case 'L'  -> {
+                return 5;
             }
         }
         LOGGER.log("[CODE-GEN] приоритет у некорректного типа", true);
