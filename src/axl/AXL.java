@@ -24,9 +24,6 @@ Empty dream: by шиза
 package axl;
 
 import axl.general.ClassEnumerator;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ScanResult;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
@@ -41,15 +38,9 @@ public class AXL {
     public static final boolean compile_local_var_ref = true;
 
     public static void main(String[] args) {
+        boolean is_compile = false;
 
-        boolean is_compile = true;
-        ScanResult scanResult = new ClassGraph().whitelistPackages("axl.general").scan();
-        for (ClassInfo classInfo : scanResult.getAllClasses()) {
-            System.out.println(classInfo.getName());
-        }
-        System.out.println(scanResult.getAllClasses().size());
-        //System.out.println(ClassEnumerator.getPackageClasses("java.lang"));
-
+        System.out.println(ClassEnumerator.getPackageClasses("java.lang"));
 
         if(is_compile)
         {

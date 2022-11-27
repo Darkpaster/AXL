@@ -1,8 +1,5 @@
 package axl.general;
 
-
-import jdk.internal.reflect.Reflection;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -82,7 +79,7 @@ public class ClassEnumerator {
     }
 
     public static List<Class<?>> getPackageClasses(String pkg) {
-        return getPackageClasses(pkg, ClassLoader.getPlatformClassLoader());
+        return getPackageClasses(pkg, ClassLoader.getSystemClassLoader());
     }
 
     public static List<Class<?>> getPackageClasses(String pkgname, ClassLoader l) {
