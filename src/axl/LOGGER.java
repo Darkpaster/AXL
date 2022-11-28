@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static axl.AXL.SAVE_LOG;
 import static java.lang.System.exit;
 
 public class LOGGER {
@@ -23,7 +24,8 @@ public class LOGGER {
         log(text);
         if(exit)
         {
-            save();
+            if(SAVE_LOG)
+                save();
             exit(666);
         }
     }
