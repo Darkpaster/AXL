@@ -8,11 +8,12 @@ import org.objectweb.asm.MethodVisitor;
 import static org.objectweb.asm.Opcodes.*;
 
 public class AstGetLocalVar extends Ast {
+    public String name;
     public VarsCounter.Var var;
 
-    public AstGetLocalVar(VarsCounter.Var var)
+    public AstGetLocalVar(String name)
     {
-        this.var = var;
+        this.name = name;
     }
 
     @Override

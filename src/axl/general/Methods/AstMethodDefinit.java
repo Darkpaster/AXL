@@ -6,11 +6,14 @@ import axl.general.LocalVars.AstGetLocalVar;
 import axl.general.LocalVars.AstLocalVarDefinit;
 import axl.general.LocalVars.AstSetLocalVar;
 import axl.general.LocalVars.VarsCounter;
-import org.objectweb.asm.ClassWriter;
+import axl.lib.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
 import java.util.ArrayList;
+
+import static org.objectweb.asm.Opcodes.ACC_STATIC;
+import static org.objectweb.asm.Opcodes.RETURN;
 
 public class AstMethodDefinit extends Ast {
 
@@ -37,25 +40,36 @@ public class AstMethodDefinit extends Ast {
         Label end_method = new Label();
         mv.visitLabel(start_method);
 
+        if((mod&ACC_STATIC) != ACC_STATIC) {
+            vc.add(new VarsCounter.Var("this", cw.get_type_jvm()));
+            VarsCounter.Var var = vc.get("this");
+            var.start = start_method;
+            var.end = end_method;
+        }
+
         Label last_label = start_method;
         for(Ast ast: body)
         {
+            if(ast instanceof AstSetLocalVar)
+                ((AstSetLocalVar) ast).var = vc.get(((AstSetLocalVar) ast).name);
+            else if(ast instanceof AstGetLocalVar)
+                ((AstGetLocalVar) ast).var = vc.get(((AstGetLocalVar) ast).name);
+
             Label label = new Label();
             if(ast instanceof AstLocalVarDefinit)
             {
                 vc.add(new VarsCounter.Var(((AstLocalVarDefinit) ast).name, ((AstLocalVarDefinit) ast).type));
-                if(!AXL.compile_local_var_ref)
-                    continue;
-                VarsCounter.Var var = vc.get(((AstLocalVarDefinit) ast).name);
-                var.start = last_label;
-                var.end = label;
-                continue;
+                if(AXL.compile_local_var_ref) {
+                    VarsCounter.Var var = vc.get(((AstLocalVarDefinit) ast).name);
+                    var.start = last_label;
+                    var.end = label;
+                }
             }
 
             if(AXL.compile_local_var_ref)
                 if(ast instanceof AstGetLocalVar)
                     ((AstGetLocalVar)ast).var.end = label;
-                else  if(ast instanceof AstSetLocalVar)
+                else if(ast instanceof AstSetLocalVar)
                     ((AstSetLocalVar)ast).var.end = label;
 
             ast.codegen(mv);
@@ -63,6 +77,9 @@ public class AstMethodDefinit extends Ast {
             last_label = label;
             mv.visitLabel(label);
         }
+
+        if(descriptor.charAt(descriptor.length()-1) == 'V')
+            mv.visitInsn(RETURN);
 
         mv.visitLabel(end_method);
 

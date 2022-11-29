@@ -2,7 +2,7 @@ package axl.general.Values;
 
 import axl.LOGGER;
 import axl.general.Ast;
-import org.objectweb.asm.ClassWriter;
+import axl.lib.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
 import static org.objectweb.asm.Opcodes.*;
