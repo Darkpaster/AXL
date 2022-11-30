@@ -1,17 +1,24 @@
 package axl.general.LocalVars;
 
-import axl.AXL;
 import axl.LOGGER;
-import jdk.jfr.Unsigned;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class VarsCounter {
+public class VarCounter {
     public int id_count = 0;
     public ArrayList<Var> vars = new ArrayList<>();
+
+    private VarCounter parent = null;
+
+    public VarCounter(){}
+
+    public VarCounter(VarCounter parent)
+    {
+        this.parent = parent;
+        this.id_count = parent.id_count;
+    }
 
     public void add(Var var)
     {
@@ -27,6 +34,10 @@ public class VarsCounter {
         for(Var current: vars)
             if(current.name.equals(name))
                 return current;
+
+        if(parent != null)
+            return parent.get(name);
+
         LOGGER.log("[CODE-GEN] переменная \""+name+"\" не инициализированна", true);
         return new Var("0", "0");
     }

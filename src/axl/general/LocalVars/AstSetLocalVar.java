@@ -9,7 +9,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class AstSetLocalVar extends Ast {
     public String name;
-    public VarsCounter.Var var;
+    public VarCounter.Var var;
     public Ast value;
 
     public AstSetLocalVar(String name, Ast value)

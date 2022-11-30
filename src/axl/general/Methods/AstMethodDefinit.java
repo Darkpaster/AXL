@@ -5,7 +5,7 @@ import axl.general.Ast;
 import axl.general.LocalVars.AstGetLocalVar;
 import axl.general.LocalVars.AstLocalVarDefinit;
 import axl.general.LocalVars.AstSetLocalVar;
-import axl.general.LocalVars.VarsCounter;
+import axl.general.LocalVars.VarCounter;
 import axl.lib.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -34,15 +34,18 @@ public class AstMethodDefinit extends Ast {
     @Override
     public void codegen(ClassWriter cw) {
         MethodVisitor mv = cw.visitMethod(mod, name, descriptor, null, get_exceptions());
-        VarsCounter vc = new VarsCounter();
+        VarCounter vc = new VarCounter();
+
+        int line = 0;
+        int current_line = 0;
 
         Label start_method = new Label();
         Label end_method = new Label();
         mv.visitLabel(start_method);
 
         if((mod&ACC_STATIC) != ACC_STATIC) {
-            vc.add(new VarsCounter.Var("this", cw.get_type_jvm()));
-            VarsCounter.Var var = vc.get("this");
+            vc.add(new VarCounter.Var("this", cw.get_type_jvm()));
+            VarCounter.Var var = vc.get("this");
             var.start = start_method;
             var.end = end_method;
         }
@@ -50,6 +53,10 @@ public class AstMethodDefinit extends Ast {
         Label last_label = start_method;
         for(Ast ast: body)
         {
+            if(AXL.compile_line_counter)
+                if(ast.line != 0)
+                    current_line = ast.line;
+
             if(ast instanceof AstSetLocalVar)
                 ((AstSetLocalVar) ast).var = vc.get(((AstSetLocalVar) ast).name);
             else if(ast instanceof AstGetLocalVar)
@@ -58,11 +65,12 @@ public class AstMethodDefinit extends Ast {
             Label label = new Label();
             if(ast instanceof AstLocalVarDefinit)
             {
-                vc.add(new VarsCounter.Var(((AstLocalVarDefinit) ast).name, ((AstLocalVarDefinit) ast).type));
+                vc.add(new VarCounter.Var(((AstLocalVarDefinit) ast).name, ((AstLocalVarDefinit) ast).type));
                 if(AXL.compile_local_var_ref) {
-                    VarsCounter.Var var = vc.get(((AstLocalVarDefinit) ast).name);
+                    VarCounter.Var var = vc.get(((AstLocalVarDefinit) ast).name);
                     var.start = last_label;
                     var.end = label;
+                    line = current_line;
                 }
             }
 
@@ -71,7 +79,11 @@ public class AstMethodDefinit extends Ast {
                     ((AstGetLocalVar)ast).var.end = label;
                 else if(ast instanceof AstSetLocalVar)
                     ((AstSetLocalVar)ast).var.end = label;
-
+            if(AXL.compile_line_counter)
+                if(line != current_line) {
+                    mv.visitLineNumber(current_line, last_label);
+                    line = current_line;
+                }
             ast.codegen(mv);
 
             last_label = label;
@@ -86,7 +98,7 @@ public class AstMethodDefinit extends Ast {
         if(!AXL.compile_local_var_ref)
             return;
 
-        for (VarsCounter.Var var: vc.vars)
+        for (VarCounter.Var var: vc.vars)
             var.gen_ref(mv);
     }
 

@@ -43,16 +43,16 @@ import static org.objectweb.asm.Opcodes.*;
 public class AXL {
 
     public static final int CLASSES_VERSION = 49;
-    public static final boolean compile_local_var_ref = true;
+
+    // optimization -O0 -O1 -O2
+    public static final boolean compile_local_var_ref = false;
+    public static final boolean compile_line_counter  = false;
+    public static final boolean optimize_math         = true;
+
     public static final boolean SAVE_LOG = false;
 
-    public static String type_main_class;
-
-    public void test_method() {
-        int test1 = 23;
-    }
-
     public static void main(String[] args) throws NoSuchFieldException, NoSuchMethodException {
+
         boolean is_compile = true;
 
         Imports.import_mul("java.lang");
@@ -93,8 +93,26 @@ public class AXL {
 
             {
                 ArrayList<Ast> body = new ArrayList<>();
-                body.add(new AstLocalVarDefinit("test", "I"));
-                body.add(new AstSetLocalVar("test", new ValueInt((byte) 23)));
+                {
+                    Ast i = (new AstLocalVarDefinit("имя_первой_переменной", "I"));
+                    i.line = 2;
+                    body.add(i);
+                }
+                {
+                    Ast i = new AstSetLocalVar("имя_первой_переменной", new ValueInt((byte) 23));
+                    i.line = 4;
+                    body.add(i);
+                }
+                {
+                    Ast i = (new AstLocalVarDefinit("имя_второй_переменной", "I"));
+                    i.line = 5;
+                    body.add(i);
+                }
+                {
+                    Ast i = new AstSetLocalVar("имя_второй_переменной", new ValueInt((byte) 23));
+                    i.line = 6;
+                    body.add(i);
+                }
                 AstMethodDefinit method_ast = new AstMethodDefinit("test_method", body, ACC_PUBLIC, "()V");
                 method_ast.codegen(cw);
             }

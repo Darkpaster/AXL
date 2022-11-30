@@ -5,6 +5,8 @@ import axl.lib.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
 public abstract class Ast {
+    public int line = 0;
+
     public void codegen(MethodVisitor mv){
         LOGGER.log("[CODE-GEN] вызов 'codegen(mv)' у неверного класса", true);
     }
