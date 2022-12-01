@@ -1,5 +1,7 @@
 package axl.general.LocalVars;
 
+// Необходимо добавить проверку на использование
+
 import axl.LOGGER;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
