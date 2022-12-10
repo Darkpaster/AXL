@@ -79,7 +79,7 @@ public class AstPreInc extends AstUnary{ // --i ++i
     }
 
     @Override
-    public String get_type_jvm() {
+    public String get_type_jvm() { // Обязательно (нужно в будущем)
         return current.get_type_jvm();
     }
 }
