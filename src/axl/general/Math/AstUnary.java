@@ -3,7 +3,7 @@ package axl.general.Math;
 import axl.general.Ast;
 
 public class AstUnary extends AstMath {
-    private Ast current;
+    protected Ast current;
 
     public AstUnary(Ast current)
     {

@@ -27,6 +27,7 @@ import axl.general.Ast;
 import axl.general.LocalVars.AstLocalVarDefinit;
 import axl.general.LocalVars.AstSetLocalVar;
 import axl.general.Methods.AstMethodDefinit;
+import axl.general.Values.ValueByte;
 import axl.general.Values.ValueInt;
 import axl.general.imports.Imports;
 import axl.lib.ClassWriter;
@@ -45,15 +46,24 @@ public class AXL {
     public static final int CLASSES_VERSION = 49;
 
     // optimization -O0 -O1 -O2
-    public static final boolean compile_local_var_ref = false;
-    public static final boolean compile_line_counter  = false;
+    public static final boolean compile_local_var_ref = true;
+    public static final boolean compile_line_counter  = true;
     public static final boolean optimize_math         = true;
 
     public static final boolean SAVE_LOG = false;
 
     public static void main(String[] args) throws NoSuchFieldException, NoSuchMethodException {
-
         boolean is_compile = true;
+
+        byte q2 = 0;
+        char q3 = (char) q2++;
+        short q4 = (short) q3++;
+        int q5 = q4++;
+        long q6 = q5++;
+        float q7 = q6++;
+        double q8 = q7++;
+        double q9 = q8++;
+
 
         Imports.import_mul("java.lang");
         System.out.println(Imports.getClass("String").getName());
@@ -84,7 +94,7 @@ public class AXL {
             {
                 mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
                 mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-                mv.visitLdcInsn("Hello AXL!");
+                mv.visitLdcInsn("Отошел на 5-10 минут.\ntime: 14:54\n(Баг со стеком решил как видишь)");
                 mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V");
                 mv.visitMaxs(1, 1);
                 mv.visitInsn(RETURN);
@@ -95,21 +105,19 @@ public class AXL {
                 ArrayList<Ast> body = new ArrayList<>();
                 {
                     Ast i = (new AstLocalVarDefinit("имя_первой_переменной", "I"));
-                    i.line = 2;
                     body.add(i);
                 }
                 {
-                    Ast i = new AstSetLocalVar("имя_первой_переменной", new ValueInt((byte) 23));
+                    Ast i = new AstSetLocalVar("имя_первой_переменной", new ValueByte((byte) 1));
                     i.line = 4;
                     body.add(i);
                 }
                 {
                     Ast i = (new AstLocalVarDefinit("имя_второй_переменной", "I"));
-                    i.line = 5;
                     body.add(i);
                 }
                 {
-                    Ast i = new AstSetLocalVar("имя_второй_переменной", new ValueInt((byte) 23));
+                    Ast i = new AstSetLocalVar("имя_второй_переменной", new ValueInt((byte) 1));
                     i.line = 6;
                     body.add(i);
                 }

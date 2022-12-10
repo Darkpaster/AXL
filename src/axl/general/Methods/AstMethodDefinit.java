@@ -12,15 +12,14 @@ import org.objectweb.asm.MethodVisitor;
 
 import java.util.ArrayList;
 
-import static org.objectweb.asm.Opcodes.ACC_STATIC;
-import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.*;
 
 public class AstMethodDefinit extends Ast {
 
     public String name;
     public ArrayList<Ast> body;
     public int mod;
-    public String descriptor; // (Ljava.lang.String;I)V
+    public String descriptor; // (Ljava.lang.String;I)J && long test(String str, int i)
     public ArrayList<String> exceptions = new ArrayList<>();
 
     public AstMethodDefinit(String name, ArrayList<Ast> body, int mod, String descriptor)
@@ -54,7 +53,7 @@ public class AstMethodDefinit extends Ast {
         for(Ast ast: body)
         {
             if(AXL.compile_line_counter)
-                if(ast.line != 0)
+                if(ast.line != 0 && !(ast instanceof AstLocalVarDefinit))
                     current_line = ast.line;
 
             if(ast instanceof AstSetLocalVar)
@@ -100,6 +99,9 @@ public class AstMethodDefinit extends Ast {
 
         for (VarCounter.Var var: vc.vars)
             var.gen_ref(mv);
+
+        mv.visitMaxs(1, 1);
+        mv.visitEnd();
     }
 
     public String[] get_exceptions()
