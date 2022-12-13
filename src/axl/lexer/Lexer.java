@@ -1,7 +1,7 @@
 package axl.lexer;
 
 import axl.LOGGER;
-import axl.general.*;
+import axl.general.Values.*;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ public class Lexer {
 
     public Lexer(String content)
     {
-        this.content = content;
+        this.content = content+" ";
         LOGGER.log("[LEXER] обработка:\n\"\"\"\n"+content+"\n\"\"\"");
         run();
     }
@@ -70,7 +70,7 @@ public class Lexer {
                 continue;
             }
 
-            if ((current >= '0' && '9' >= current) || current == '-' || current == '.') {
+            if ((current >= '0' && '9' >= current) || current == '.' || current == '-') {
                 token_number();
                 continue;
             }
@@ -142,7 +142,7 @@ public class Lexer {
             str.append(current);
             next();
         }
-        if(str.toString().equals("")) LOGGER.log("[LEXER] передана структура 0 без числа", true);
+        if(str.toString().equals("")) LOGGER.log("[LEXER] передана структура 0q без числа", true);
 
         long value = Long.parseLong(str.toString(), 8);
 
@@ -193,13 +193,37 @@ public class Lexer {
         StringBuilder str = new StringBuilder();
         boolean type = false;
 
-        if(current == '-' || current == '.')
+        if(current == '.' || current == '-')
         {
             str.append(current);
 
-            if(current == '.') {
-                type = true;
+            {
+                Token last_token;
+                if(tokens.size() > 0)
+                    last_token = tokens.get(tokens.size() - 1);
+                else
+                    last_token = new Token(Token.Type.EQUAL);
+                if (current == '-' &&
+                        (
+                                last_token.is_word() ||
+                                last_token.is_rpar() ||
+                                last_token.is_char() ||
+                                        last_token.is_byte() ||
+                                        last_token.is_short() ||
+                                        last_token.is_string() ||
+                                        last_token.is_int() ||
+                                        last_token.is_long() ||
+                                        last_token.is_float() ||
+                                        last_token.is_double()
+                        )) {
+                    token_op();
+                    return;
+                }
+                else if(current == '.')
+                    type = true;
             }
+
+
             next();
             if(!(current >= '0' && '9' >= current))
             {
@@ -207,6 +231,7 @@ public class Lexer {
                 token_op();
                 return;
             }
+
             last();
 
             next();
@@ -223,24 +248,24 @@ public class Lexer {
             str.append(current);
             next();
         }
+        double value = Double.parseDouble(str.toString());
 
-        double value = Float.parseFloat(str.toString());
-
-        boolean is_double = true;
-        if(current == 'f')
-        {
-            is_double = false;
+        byte is_double = 2;
+        if (current == 'f') {
+            is_double = 0;
+            next();
+        }
+        else if (current == 'd') {
+            is_double = 1;
             next();
         }
 
-        if(type || !is_double)
-        {
-            if(is_double) {
-                LOGGER.log("[LEXER] число double \""+str+"\"");
+        if(type || is_double != 2) {
+            if (is_double > 0) {
+                LOGGER.log("[LEXER] число double \"" + str + "\"");
                 add(new Token(Token.Type.DOUBLE, new ValueDouble(value)));
-            }
-            else {
-                LOGGER.log("[LEXER] число float \""+str+"\"");
+            } else {
+                LOGGER.log("[LEXER] число float \"" + str + "\"");
                 add(new Token(Token.Type.FLOAT, new ValueFloat((float) value)));
             }
             return;
@@ -265,7 +290,7 @@ public class Lexer {
         }
         else {
             LOGGER.log("[LEXER] число long \""+value+"\"");
-            add(new Token(Token.Type.LONG, new ValueLong((long) value)));
+            add(new Token(Token.Type.LONG, new ValueLong(value)));
         }
     }
 
@@ -293,7 +318,7 @@ public class Lexer {
     private void token_op()
     {
         if(current == 0x00) return;
-        Token.Type type = null;
+        Token.Type type;
         switch (current) {
             case ';' -> type = Token.Type.SEMI;
             case '.' -> type = Token.Type.DOT;

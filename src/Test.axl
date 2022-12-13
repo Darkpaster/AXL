@@ -1,11 +1,16 @@
-class axl.Test
+class AXL.src.Test
 {
     public static void main(String[] args)
     {
-        long h = 0x10;
-        long b = 0b10;
-        long q = 0q10;
-        long t = 10;
-        System.out.println(h+b+q+t);
+        int i = 3;
+        __jvm__ {
+            BIPUSH 2
+            ILOAD %i
+            IADD
+            ISTORE %i
+            GETSTATIC "java/lang/System" "out" "Ljava/io/PrintStream;"
+            ILOAD %i
+            INVOKEVIRTUAL "java/io/PrintStream" "println" "(I)V"
+        }
     }
 }
